@@ -50,9 +50,10 @@ export const signin = async (req, res) => {
       { expiresIn: "1h" }
     );
 
+    // eslint-disable-next-line no-unused-vars
     const { password, ...rest } = existingUser._doc;
 
-    res.status(200).json({ success: true, data: rest, token });
+    res.status(200).json({ success: true, data: rest, token, message:"Sign-in successful" });
   } catch (error) {
     res.status(500).json({ message: "something went wrong with signin" });
     console.log(error);
