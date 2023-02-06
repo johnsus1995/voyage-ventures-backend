@@ -7,7 +7,7 @@ export const signUp = async (req, res) => {
   try {
     const isExistingUser = await userModel.findOne({ email });
     if (isExistingUser) {
-      return res.status(400).json({ message: "User already exist" });
+      return res.status(400).json({ message: "User already exist, please login." });
     }
 
     const hashedPassword = await bcrypt.hash(password, 12);
@@ -25,7 +25,7 @@ export const signUp = async (req, res) => {
     );
     res.status(201).json({ success: true, data: newUser, token });
   } catch (error) {
-    res.status(500).json({ message: "something went wrong with signup" });
+    res.status(500).json({ message: "Something went wrong with signup." });
     console.log(error);
   }
 };
@@ -34,14 +34,14 @@ export const signin = async (req, res) => {
   try {
     const existingUser = await userModel.findOne({ email: req.body.email });
     if (!existingUser) {
-      return res.status(404).json({ message: "user does not exist" });
+      return res.status(404).json({ message: "User does not exist." });
     }
     const isPasswordOk = await bcrypt.compare(
       req.body.password,
       existingUser.password
     );
     if (!isPasswordOk) {
-      return res.status(400).json({ message: "invalid credentials" });
+      return res.status(400).json({ message: "Invalid credentials." });
     }
 
     const token = jwt.sign(
@@ -55,7 +55,7 @@ export const signin = async (req, res) => {
 
     res.status(200).json({ success: true, data: rest, token, message:"Sign-in successful" });
   } catch (error) {
-    res.status(500).json({ message: "something went wrong with signin" });
+    res.status(500).json({ message: "Something went wrong with signin." });
     console.log(error);
   }
 };
