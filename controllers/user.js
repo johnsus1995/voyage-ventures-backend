@@ -34,7 +34,7 @@ export const signin = async (req, res) => {
   try {
     const existingUser = await userModel.findOne({ email: req.body.email });
     if (!existingUser) {
-      return res.status(404).json({ message: "User does not exist." });
+      return res.status(404).json({ success: false, data: "", message:"Invalid username or password." });
     }
     const isPasswordOk = await bcrypt.compare(
       req.body.password,
@@ -55,7 +55,7 @@ export const signin = async (req, res) => {
 
     res.status(200).json({ success: true, data: rest, token, message:"Sign-in successful" });
   } catch (error) {
-    res.status(500).json({ message: "Something went wrong with signin." });
+    res.status(500).json({ success: false, data: "", message:"Something went wrong with sign-in" });
     console.log(error);
   }
 };
