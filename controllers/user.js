@@ -34,14 +34,14 @@ export const signin = async (req, res) => {
   try {
     const existingUser = await userModel.findOne({ email: req.body.email });
     if (!existingUser) {
-      return res.status(404).json({ success: false, data: "", message:"Invalid username or password." });
+      return res.status(404).json({ success: false, data: "", message:"User does not exist." });
     }
     const isPasswordOk = await bcrypt.compare(
       req.body.password,
       existingUser.password
     );
     if (!isPasswordOk) {
-      return res.status(400).json({ message: "Invalid credentials." });
+      return res.status(400).json({ success: false, data: "", message:"Password is invalid." });
     }
 
     const token = jwt.sign(
