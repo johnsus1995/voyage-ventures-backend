@@ -12,7 +12,7 @@ const app = express();
 
 app.use(morgan("dev"));
 app.use(express.json({ limit: "30mb", extender: true }));
-app.use(express.urlencoded({ limit: "30mb", extender: true }));
+app.use(express.urlencoded({ limit: "30mb", extended: true }));
 app.use(cors());
 
 app.use("/users", userRouter);
