@@ -1,36 +1,44 @@
 import jwt from "jsonwebtoken";
 
-function verifyToken(req, res, next) {
-  const authHeader = req.headers["authorization"];
-  const token = authHeader && authHeader.split(" ")[1];
-
-  console.log(token);
-
-  const test =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InBhcmtAZ21haWwuY29tIiwiaWQiOiI2NDBkYWYzZDA0ZTBjNTBmMTE5ZjA2ZDgiLCJpYXQiOjE2Nzg2MjQ3ODZ9.Jx3wtLHGiMMOqCeeLz9SPNgeyU98J56xYnKHqOMyXhY"
-  
-  if (!token)
-    return res.status(401).send({ auth: false, message: "No token provided." });
-
-  jwt.verify(
-    token,
-    "08b0f215247a1d78a6598bf83616f9e3303fa3d48220a8f5c5a5a5dd5b2f5d5",
-    function (err, decoded) {
-      if (err)
-        return res
-          .status(500)
-          .send({ auth: false, message: "Failed to authenticate token." });
-
-      // if everything good, save to request for use in other routes
-      req.userId = decoded.id;
-      next();
+const verifyToken = async (req, res, next) => {
+  try {
+    const authHeader = req.headers.authorization;
+    if (!authHeader) {
+      return res.status(401).json({ message: 'Unauthorized' });
     }
-  );
-}
+
+    const token = authHeader.split(' ')[1];
+    if (!token) {
+      return res.status(401).json({ message: 'Unauthorized' });
+    }
+
+    const decoded = await jwt.verify(token, process.env.SECRET_KEY)
+
+    // Verify payload
+    if (!decoded.userId) {
+      return res.status(401).json({ message: 'Invalid token payload' });
+    }
+
+    // Verify audience and issuer
+    if (decoded.aud !== 'myapp' || decoded.iss !== 'myapp.com') {
+      return res.status(401).json({ message: 'Invalid token audience or issuer' });
+    }
+
+    req.user = decoded;
+    next();
+  } catch (error) {
+    console.error(error);
+
+    // Handle common errors
+    if (error.name === 'JsonWebTokenError') {
+      return res.status(401).json({ message: 'Invalid token' });
+    } else if (error.name === 'TokenExpiredError') {
+      return res.status(401).json({ message: 'Token expired' });
+    }
+
+    // Handle other errors
+    res.status(500).json({ message: 'Server error' });
+  }
+};
 
 export default verifyToken;
-/**
-"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.
-eyJlbWFpbCI6ImxhcmFAZ21haWwuY29tIiwiaWQiOiI2M2RlOGVlZGI4YWI0MmRkYjc2ZTQyOWMiLCJpYXQiOjE2Nzg2MTk2MTV9.
-cU2W8O743qV7RiCg2Fo2v3Yev-yUoBWy0XHaFGbzKJs"
- */
