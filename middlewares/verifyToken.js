@@ -1,16 +1,17 @@
 import jwt from "jsonwebtoken";
 import UserModel from "../models/User.js";
 
-const secret = process.env.SECRET_KEY;
-
 const auth = async (req, res, next) => {
   try {
-    const token = req.headers.authorization.split(" ")[1];
+    console.log(req.headers["authorization"])
+    let headers = req.headers["authorization"]
+    let token = headers.split(" ")[1];
+    // return
+
     const isCustomAuth = token.length < 500;
     let decodedData;
-    console.log(token)
     if (token && isCustomAuth) {
-      decodedData = jwt.verify(token, secret);
+      decodedData = jwt.verify(token, process.env.SECRET_KEY);
       req.userId = decodedData?.id;
     } else {
       decodedData = jwt.decode(token);
