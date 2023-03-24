@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import Tour from "../models/Tour.js";
 
 export const createTour = async (req, res) => {
@@ -37,6 +38,51 @@ export const getTours = async (req, res) => {
       success: true,
       data: "tours",
       message: "Something went wrong with fetching tours",
+    });
+  }
+};
+
+export const getTour = async (req, res) => {
+  const tour_id = req.params.id
+  try {
+    const tour = await Tour.findById(tour_id);
+    res.status(200).json({
+      success: true,
+      data: tour,
+      message: "Tour fetched successfully",
+    });
+  } catch (error) {
+    res.send(404).json({
+      success: true,
+      data: "tours",
+      message: "Something went wrong with fetching the tour",
+    });
+  }
+};
+
+export const getToursByUser = async (req, res) => {
+  const {id} = req.params
+
+  if(!mongoose.Types.ObjectId.isValid(id)){
+    return res.send(404).json({
+      success: false,
+      data: "",
+      message: "User does not exist!",
+    });
+  }
+  
+  try {
+    const tour = await Tour.find({created_by:id});
+    res.status(200).json({
+      success: true,
+      data: tour,
+      message: "Tour fetched successfully",
+    });
+  } catch (error) {
+    res.send(404).json({
+      success: true,
+      data: "",
+      message: "Something went wrong with fetching the tour",
     });
   }
 };
