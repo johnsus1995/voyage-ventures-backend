@@ -30,13 +30,13 @@ export const getTours = async (req, res) => {
     res.status(200).json({
       success: true,
       data: tours,
-      message: "New tour created successfully.",
+      message: "All tours fetched successfully",
     });
   } catch (error) {
     res.send(404).json({
       success: true,
       data: "tours",
-      message: "Something went wrong with tours fetching",
+      message: "Something went wrong with fetching tours",
     });
   }
 };
