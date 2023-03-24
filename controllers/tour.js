@@ -76,7 +76,7 @@ export const getToursByUser = async (req, res) => {
     res.status(200).json({
       success: true,
       data: tour,
-      message: "Tour fetched successfully",
+      message: "Tours fetched successfully",
     });
   } catch (error) {
     res.send(404).json({
