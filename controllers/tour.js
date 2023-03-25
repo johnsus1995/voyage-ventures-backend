@@ -116,7 +116,7 @@ export const updateTour = async (req, res) => {
       return res.send(404).json({
         success: false,
         data: "tours",
-        message: "Something went wrong with deleting tour",
+        message: "Not valid id",
       });
     }
 
@@ -130,7 +130,11 @@ export const updateTour = async (req, res) => {
     };
 
     await Tour.findByIdAndUpdate(id, updatedTour, { new: true });
-    res.json(updatedTour);
+    res.status(200).json({
+      success: true,
+      data: updatedTour,
+      message: "Tour updated successfully",
+    });
   } catch (error) {
     res.send(404).json({
       success: false,
@@ -139,3 +143,5 @@ export const updateTour = async (req, res) => {
     });
   }
 };
+
+//4.22
