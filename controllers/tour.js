@@ -1,12 +1,14 @@
 import mongoose from "mongoose";
+// import compressImage from "../helpers/compressImage.js";
 import Tour from "../models/Tour.js";
 
 export const createTour = async (req, res) => {
   const tour = req.body;
 
   const newTour = new Tour({
-    ...tour,
+    // image:compressImage(tour.image),
     created_at: new Date().toISOString(),
+    ...tour,
   });
 
   try {
