@@ -86,3 +86,54 @@ export const getToursByUser = async (req, res) => {
     });
   }
 };
+
+export const deleteTour = async (req, res) => {
+  const {id} = req.params
+
+  try {
+    const tour = await Tour.findByIdAndRemove(id);
+    res.status(200).json({
+      success: true,
+      data: tour,
+      message: "Tour deleted successfully",
+    });
+  } catch (error) {
+    res.send(404).json({
+      success: false,
+      data: "tours",
+      message: "Something went wrong with deleting tour",
+    });
+  }
+};
+
+export const updateTour = async (req, res) => {
+  const { id } = req.params;
+  const { title, desc, created_by, image, tags } = req.body;
+  try {
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.send(404).json({
+        success: false,
+        data: "tours",
+        message: "Something went wrong with deleting tour",
+      });
+    }
+
+    const updatedTour = {
+      created_by,
+      title,
+      desc,
+      tags,
+      image,
+      _id: id,
+    };
+
+    await Tour.findByIdAndUpdate(id, updatedTour, { new: true });
+    res.json(updatedTour);
+  } catch (error) {
+    res.send(404).json({
+      success: false,
+      data: "tours",
+      message: "Something went wrong with updating tour",
+    });
+  }
+};
