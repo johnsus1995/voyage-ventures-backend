@@ -13,6 +13,7 @@ import verifyToken from "../middlewares/verifyToken.js";
 
 router.get("/all-tours", getTours);
 router.get("/:id", getTour);
+router.get("/search", updateTour);
 
 router.post("/create", verifyToken, createTour);
 router.get("/user/:id", verifyToken, getToursByUser);

@@ -138,10 +138,29 @@ export const updateTour = async (req, res) => {
   } catch (error) {
     res.send(404).json({
       success: false,
-      data: "tours",
+      data: "",
       message: "Something went wrong with updating tour",
     });
   }
 };
 
-//4.22
+export const searchTours = async (req,res) => {
+
+  const {search_query} = req.query
+  
+  try {
+    const title = new RegExp(search_query,"i")
+    const tours = await Tour.find({title})
+    res.status(200).json({
+      success: true,
+      data: tours,
+      message: "Tour fetched successfully",
+    });
+  } catch (error) {
+    res.send(404).json({
+      success: false,
+      data: "",
+      message: "Something went wrong with updating tour",
+    });
+  }
+}
