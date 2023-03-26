@@ -36,7 +36,7 @@ export const getTours = async (req, res) => {
       message: "All tours fetched successfully",
     });
   } catch (error) {
-    res.send(404).json({
+    res.status(404).json({
       success: true,
       data: "tours",
       message: "Something went wrong with fetching tours",
@@ -54,10 +54,10 @@ export const getTour = async (req, res) => {
       message: "Tour fetched successfully",
     });
   } catch (error) {
-    res.send(404).json({
+    res.status(404).json({
       success: true,
       data: "tours",
-      message: "Something went wrong with fetching the tour",
+      message: "Something went wrong with fetching requested tour",
     });
   }
 };
@@ -66,7 +66,7 @@ export const getToursByUser = async (req, res) => {
   const {id} = req.params
 
   if(!mongoose.Types.ObjectId.isValid(id)){
-    return res.send(404).json({
+    return res.status(404).json({
       success: false,
       data: "",
       message: "User does not exist!",
@@ -81,10 +81,10 @@ export const getToursByUser = async (req, res) => {
       message: "Tours fetched successfully",
     });
   } catch (error) {
-    res.send(404).json({
+    res.status(404).json({
       success: true,
       data: "",
-      message: "Something went wrong with fetching the tour",
+      message: "Something went wrong with fetching tours",
     });
   }
 };
@@ -100,7 +100,7 @@ export const deleteTour = async (req, res) => {
       message: "Tour deleted successfully",
     });
   } catch (error) {
-    res.send(404).json({
+    res.status(404).json({
       success: false,
       data: "tours",
       message: "Something went wrong with deleting tour",
@@ -113,7 +113,7 @@ export const updateTour = async (req, res) => {
   const { title, desc, created_by, image, tags } = req.body;
   try {
     if (!mongoose.Types.ObjectId.isValid(id)) {
-      return res.send(404).json({
+      return res.status(404).json({
         success: false,
         data: "tours",
         message: "Not valid id",
@@ -136,7 +136,7 @@ export const updateTour = async (req, res) => {
       message: "Tour updated successfully",
     });
   } catch (error) {
-    res.send(404).json({
+    res.status(404).json({
       success: false,
       data: "",
       message: "Something went wrong with updating tour",
@@ -144,23 +144,22 @@ export const updateTour = async (req, res) => {
   }
 };
 
-export const searchTours = async (req,res) => {
+export const searchTours = async (req, res) => {
+  const { search_query } = req.query;
 
-  const {search_query} = req.query
-  
   try {
-    const title = new RegExp(search_query,"i")
-    const tours = await Tour.find({title})
+    const title = new RegExp(search_query, "i");
+    const tours = await Tour.find({ title });
     res.status(200).json({
       success: true,
       data: tours,
       message: "Tour fetched successfully",
     });
   } catch (error) {
-    res.send(404).json({
+    res.status(404).json({
       success: false,
       data: "",
-      message: "Something went wrong with updating tour",
+      message: "Searching tours was failed",
     });
   }
-}
+};
