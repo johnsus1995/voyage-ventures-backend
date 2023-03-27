@@ -40,7 +40,7 @@ export const getTours = async (req, res) => {
       success: true,
       data: tours,
       total,
-      lastPage: Math.ceil(total/limit),
+      last_age: Math.ceil(total/limit),
       message: "All tours fetched successfully",
     });
   } catch (error) {
@@ -51,6 +51,9 @@ export const getTours = async (req, res) => {
     });
   }
 };
+
+//15-jun-23 
+//15000km
 
 export const getTour = async (req, res) => {
   const tour_id = req.params.id
