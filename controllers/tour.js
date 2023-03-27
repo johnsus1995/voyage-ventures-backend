@@ -28,11 +28,19 @@ export const createTour = async (req, res) => {
 };
 
 export const getTours = async (req, res) => {
+  const {page} = req.query
   try {
-    const tours = await Tour.find();
+
+    const limit = 6
+    const startIndex = (Number(page)-1)*limit
+    const total = await Tour.countDocuments({})
+    const tours = await Tour.find().limit(limit).skip(startIndex);
+    
     res.status(200).json({
       success: true,
       data: tours,
+      total,
+      lastPage: Math.ceil(total/limit),
       message: "All tours fetched successfully",
     });
   } catch (error) {
